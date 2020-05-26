@@ -27,7 +27,7 @@ export class ListComponent implements OnInit {
 
   client: Client = new Client();
   promedioEdad: number = 0;
-  promedioMuerte: number = 79;
+  promedioMuerte: number = 72;
 
   clients: any;
   constructor(
@@ -100,12 +100,15 @@ export class ListComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.angForm.value.key == true) {
-      delete this.angForm.value.key;
-      this.clientService.createClient(this.angForm.value);
+    const data = this.angForm.value;
+    delete data.age;
+    delete data.death;
+    if (data.key == true) {
+      delete data.key;
+      this.clientService.createClient(data);
     } else {
       this.clientService
-        .updateClient(this.angForm.value.key, this.angForm.value)
+        .updateClient(data.key, data)
         .catch(err => console.log(err));
     }
     this.modal.close();
