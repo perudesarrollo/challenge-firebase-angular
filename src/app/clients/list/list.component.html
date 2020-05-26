@@ -1,0 +1,107 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Clientes</h1>
+    <div class="btn-toolbar mb-2 mb-md-0 text-center">
+        <div class="btn-group mr-2 mb-1">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Promedio de Edad:
+                <span class="badge badge-primary badge-pill">
+                    {{ this.promedioEdad }}
+                </span>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Promedio Edad de Muerte:
+                <span class="badge badge-primary badge-pill">
+                    {{ this.promedioMuerte }}
+                </span>
+            </button>
+        </div>
+        <button type="button" class="btn btn-sm btn-primary mr-2" (click)="addClient(contentModal)">
+            Agregar Cliente
+        </button>
+        <button type="button" class="btn btn-sm btn-danger" (click)="deleteClients()">
+            Eliminar todo los Clientes
+        </button>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellidos</th>
+                <th scope="col">Fecha Nacimiento</th>
+                <th scope="col">Edad</th>
+                <th scope="col">Fecha probable de muerte</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let client of clients; index as i">
+                <th scope="row">{{ i + 1}}</th>
+                <td>{{ client.name }}</td>
+                <td>{{ client.last_name }}</td>
+                <td>{{ client.birth_date }}</td>
+                <td>{{ client.age }}</td>
+                <td class="text-center">{{ client.death }}</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn-sm btn btn-outline-primary"
+                            (click)="editClient(contentModal, client)">Editar</button>
+                        <button type="button" class="btn-sm btn btn-outline-danger"
+                            (click)="removeClient(client)">Eliminar</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<ng-template #contentModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ (angForm.value?.key) ? 'Agregar' : 'Actualizar' }}
+            Cliente</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="angForm" novalidate (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="hidden" class="form-control" formControlName="key">
+                <input type="text" class="form-control" placeholder="Ingrese Nombre" formControlName="name">
+            </div>
+            <div *ngIf="angForm.controls['name'].invalid && (angForm.controls['name'].dirty || angForm.controls['name'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="angForm.controls['name'].errors.required">
+                    Nombre es requerido
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Apellidos</label>
+                <input type="text" class="form-control" placeholder="Ingrese Apellidos" formControlName="last_name">
+            </div>
+            <div *ngIf="angForm.controls['last_name'].invalid && (angForm.controls['last_name'].dirty || angForm.controls['last_name'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="angForm.controls['last_name'].errors.required">
+                    Apellido es requerido
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Fecha Nacimiento</label>
+                <input type="date" class="form-control" placeholder="Ingrese Apellidos" formControlName="birth_date">
+            </div>
+            <div *ngIf="angForm.controls['birth_date'].invalid && (angForm.controls['birth_date'].dirty || angForm.controls['birth_date'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="angForm.controls['birth_date'].errors.required">
+                    Fecha Nacimiento es requerido
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-success"
+                    [disabled]="angForm.pristine || angForm.invalid">Guardar</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
